@@ -1,2 +1,2 @@
 # Java_Image
-Simple image editing library for java.
+Simple image editing script for java.
