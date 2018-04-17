@@ -7,7 +7,12 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-
+/**
+ * Image class for editing images.
+ * For any bugs or questions, please visit https://github.com/peanut15/Java_Image/issues.
+ * @author cy
+ *
+ */
 public class Image {
 	private BufferedImage im;
 	public static String JPG = "jpg";
