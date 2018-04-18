@@ -1,7 +1,8 @@
-
 import java.util.function.*;
+
 /**
  * Color class to hold the RGB values of a color.
+ * 
  * @author cy
  *
  */

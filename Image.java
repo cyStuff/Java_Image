@@ -52,13 +52,13 @@ public class Image {
 	protected Image(BufferedImage bufferedImage) {
 		im = bufferedImage;
 	}
-	
+
 	public Image clone() {
-		Image i = new Image(width(),height());
+		Image i = new Image(width(), height());
 		i.setSection(0, 0, this);
 		return i;
 	}
-	
+
 	/**
 	 * Returns the internal BufferedImage.
 	 * 
@@ -94,70 +94,90 @@ public class Image {
 	public void setPixel(int x, int y, Color color) {
 		im.setRGB(x, y, toInt(color.getArray()));
 	}
-	
+
 	/**
 	 * Sets the entire red channel to the given color.
-	 * @param color - Int to set all the red channel to.
+	 * 
+	 * @param color
+	 *            - Int to set all the red channel to.
 	 */
 	public void setRedChannel(int color) {
 		for (int i = 0; i < width(); i++) {
 			for (int j = 0; j < height(); j++) {
-				setPixel(i,j,getPixel(i,j).setRed(color));
+				setPixel(i, j, getPixel(i, j).setRed(color));
 			}
 		}
 	}
+
 	/**
-	 * Uses a lambda expression to set the chanel. Use the form setRedChannel(x -> x);
-	 * @param operator - The UnaryOperator to set the entire channel.
+	 * Uses a lambda expression to set the chanel. Use the form setRedChannel(x
+	 * -> x);
+	 * 
+	 * @param operator
+	 *            - The UnaryOperator to set the entire channel.
 	 */
 	public void setRedChannel(UnaryOperator<Integer> operator) {
 		for (int i = 0; i < width(); i++) {
 			for (int j = 0; j < height(); j++) {
-				setPixel(i,j,getPixel(i, j).setRed(operator));
+				setPixel(i, j, getPixel(i, j).setRed(operator));
 			}
 		}
 	}
+
 	/**
 	 * Sets the entire green channel to the given color.
-	 * @param color - Int to set all the green channel to.
+	 * 
+	 * @param color
+	 *            - Int to set all the green channel to.
 	 */
 	public void setGreenChannel(int color) {
 		for (int i = 0; i < width(); i++) {
 			for (int j = 0; j < height(); j++) {
-				setPixel(i,j,getPixel(i,j).setGreen(color));
+				setPixel(i, j, getPixel(i, j).setGreen(color));
 			}
 		}
 	}
+
 	/**
-	 * Uses a lambda expression to set the chanel. Use the form setGreenChannel(x -> x);
-	 * @param operator - The UnaryOperator to set the entire channel.
+	 * Uses a lambda expression to set the chanel. Use the form
+	 * setGreenChannel(x -> x);
+	 * 
+	 * @param operator
+	 *            - The UnaryOperator to set the entire channel.
 	 */
 	public void setGreenChannel(UnaryOperator<Integer> operator) {
 		for (int i = 0; i < width(); i++) {
 			for (int j = 0; j < height(); j++) {
-				setPixel(i,j,getPixel(i, j).setGreen(operator));
+				setPixel(i, j, getPixel(i, j).setGreen(operator));
 			}
 		}
 	}
+
 	/**
 	 * Sets the entire blue channel to the given color.
-	 * @param color - Int to set all the blue channel to.
+	 * 
+	 * @param color
+	 *            - Int to set all the blue channel to.
 	 */
 	public void setBlueChannel(int color) {
 		for (int i = 0; i < width(); i++) {
 			for (int j = 0; j < height(); j++) {
-				setPixel(i,j,getPixel(i,j).setBlue(color));
+				setPixel(i, j, getPixel(i, j).setBlue(color));
 			}
 		}
 	}
+
 	/**
-	 * Uses a lambda expression to set the chanel. Use the form setBlueChannel(x -> x);
-	 * @param operator - The UnaryOperator to set the entire channel.
+	 * Uses a lambda expression to set the chanel. Use the form setBlueChannel(x
+	 * -> x);
+	 * 
+	 * @param operator
+	 *            - The UnaryOperator to set the entire channel.
 	 */
 	public void setBlueChannel(UnaryOperator<Integer> operator) {
 		for (int i = 0; i < width(); i++) {
 			for (int j = 0; j < height(); j++) {
-				setPixel(i,j,getPixel(i, j).setBlue(operator));
+				setPixel(i, j, getPixel(i, j).setBlue(operator));
 			}
 		}
 	}

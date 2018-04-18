@@ -27,23 +27,28 @@ public final class Gif {
 	 * @param fileName
 	 *            - The name of the output file.
 	 */
-	public static void makeGif(Image[] images, int frameTime, String fileName) {
-		try {
-			ImageOutputStream output = new FileImageOutputStream(new File(
-					fileName));
-			GifWriter g = new GifWriter(output, images[0].getBI().getType(),
-					frameTime, true);
-			for (int i = 0; i < images.length; i++) {
-				g.writeToSequence(images[i].getBI());
-			}
-			g.close();
-			output.close();
-		} catch (Exception e) {
-			e.printStackTrace();
+	public static void makeGif(Image[] images, int frameTime, String fileName) throws IOException {
+		ImageOutputStream output = new FileImageOutputStream(new File(
+				fileName));
+		GifWriter g = new GifWriter(output, images[0].getBI().getType(),
+				frameTime, true);
+		for (int i = 0; i < images.length; i++) {
+			g.writeToSequence(images[i].getBI());
 		}
+		g.close();
+		output.close();
 	}
-	
-	public static void makeGif(List<Image> images, int frameTime, String fileName) {
+	/**
+	 * Makes a gif from a List of Images.
+	 * 
+	 * @param images
+	 *            - List of Images to be compressed to gif.
+	 * @param frameTime
+	 *            - Time in milliseconds between frames.
+	 * @param fileName
+	 *            - The name of the output file.
+	 */
+	public static void makeGif(List<Image> images, int frameTime, String fileName) throws IOException {
 		makeGif(images.toArray(new Image[0]),frameTime,fileName);
 	}
 
