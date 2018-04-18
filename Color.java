@@ -1,3 +1,4 @@
+
 import java.util.function.*;
 /**
  * Color class to hold the RGB values of a color.
@@ -29,7 +30,7 @@ public class Color {
 	 * @throws ColorException
 	 */
 	public Color(int[] color) throws ColorException {
-		if (!(dat.length == 3)) {
+		if (!(color.length == 3)) {
 			throw new ColorException(
 					"Color array must contatain exactly 3 elements.");
 		}
@@ -42,8 +43,9 @@ public class Color {
 	 * @param color
 	 *            - int
 	 */
-	public void setRed(int color) {
+	public Color setRed(int color) {
 		dat[0] = color;
+		return this;
 	}
 
 	/**
@@ -53,8 +55,9 @@ public class Color {
 	 * @param operator
 	 *            - UnaryOperator<Integer>
 	 */
-	public void setRed(UnaryOperator<Integer> operator) {
+	public Color setRed(UnaryOperator<Integer> operator) {
 		dat[0] = operator.apply(dat[0]);
+		return this;
 	}
 
 	/**
@@ -63,8 +66,9 @@ public class Color {
 	 * @param color
 	 *            - int
 	 */
-	public void setGreen(int color) {
+	public Color setGreen(int color) {
 		dat[1] = color;
+		return this;
 	}
 
 	/**
@@ -74,8 +78,9 @@ public class Color {
 	 * @param operator
 	 *            - UnaryOperator<Integer>
 	 */
-	public void setGreen(UnaryOperator<Integer> operator) {
+	public Color setGreen(UnaryOperator<Integer> operator) {
 		dat[1] = operator.apply(dat[1]);
+		return this;
 	}
 
 	/**
@@ -84,8 +89,9 @@ public class Color {
 	 * @param color
 	 *            - int
 	 */
-	public void setBlue(int color) {
+	public Color setBlue(int color) {
 		dat[2] = color;
+		return this;
 	}
 
 	/**
@@ -95,8 +101,9 @@ public class Color {
 	 * @param operator
 	 *            - UnaryOperator<Integer>
 	 */
-	public void setBlue(UnaryOperator<Integer> operator) {
+	public Color setBlue(UnaryOperator<Integer> operator) {
 		dat[2] = operator.apply(dat[2]);
+		return this;
 	}
 
 	/**
@@ -136,7 +143,7 @@ public class Color {
 	 *            - int[3]
 	 */
 	public void setArray(int[] color) {
-		if (!(dat.length == 3)) {
+		if (!(color.length == 3)) {
 			throw new ColorException(
 					"Color array must contatain exactly 3 elements.");
 		}

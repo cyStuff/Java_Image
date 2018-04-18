@@ -1,7 +1,9 @@
+
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.imageio.IIOException;
 import javax.imageio.IIOImage;
@@ -39,6 +41,10 @@ public final class Gif {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void makeGif(List<Image> images, int frameTime, String fileName) {
+		makeGif(images.toArray(new Image[0]),frameTime,fileName);
 	}
 
 	/**

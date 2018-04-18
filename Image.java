@@ -3,11 +3,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
 
 import javax.imageio.ImageIO;
+
 /**
- * Image class for editing images.
- * For any bugs or questions, please visit https://github.com/peanut15/Java_Image/issues.
+ * Image class for editing images. For any bugs or questions, please visit
+ * https://github.com/peanut15/Java_Image/issues.
+ * 
  * @author cy
  *
  */
@@ -49,7 +52,13 @@ public class Image {
 	protected Image(BufferedImage bufferedImage) {
 		im = bufferedImage;
 	}
-
+	
+	public Image clone() {
+		Image i = new Image(width(),height());
+		i.setSection(0, 0, this);
+		return i;
+	}
+	
 	/**
 	 * Returns the internal BufferedImage.
 	 * 
@@ -84,6 +93,73 @@ public class Image {
 	 */
 	public void setPixel(int x, int y, Color color) {
 		im.setRGB(x, y, toInt(color.getArray()));
+	}
+	
+	/**
+	 * Sets the entire red channel to the given color.
+	 * @param color - Int to set all the red channel to.
+	 */
+	public void setRedChannel(int color) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i,j,getPixel(i,j).setRed(color));
+			}
+		}
+	}
+	/**
+	 * Uses a lambda expression to set the chanel. Use the form setRedChannel(x -> x);
+	 * @param operator - The UnaryOperator to set the entire channel.
+	 */
+	public void setRedChannel(UnaryOperator<Integer> operator) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i,j,getPixel(i, j).setRed(operator));
+			}
+		}
+	}
+	/**
+	 * Sets the entire green channel to the given color.
+	 * @param color - Int to set all the green channel to.
+	 */
+	public void setGreenChannel(int color) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i,j,getPixel(i,j).setGreen(color));
+			}
+		}
+	}
+	/**
+	 * Uses a lambda expression to set the chanel. Use the form setGreenChannel(x -> x);
+	 * @param operator - The UnaryOperator to set the entire channel.
+	 */
+	public void setGreenChannel(UnaryOperator<Integer> operator) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i,j,getPixel(i, j).setGreen(operator));
+			}
+		}
+	}
+	/**
+	 * Sets the entire blue channel to the given color.
+	 * @param color - Int to set all the blue channel to.
+	 */
+	public void setBlueChannel(int color) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i,j,getPixel(i,j).setBlue(color));
+			}
+		}
+	}
+	/**
+	 * Uses a lambda expression to set the chanel. Use the form setBlueChannel(x -> x);
+	 * @param operator - The UnaryOperator to set the entire channel.
+	 */
+	public void setBlueChannel(UnaryOperator<Integer> operator) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i,j,getPixel(i, j).setBlue(operator));
+			}
+		}
 	}
 
 	/**
@@ -121,6 +197,15 @@ public class Image {
 				bi.getHeight());
 		// System.out.println(dat.length);
 		im.setRGB(x, y, image.width(), image.height(), dat, 0, bi.getHeight());
+	}
+
+	/**
+	 * Sets the current image to a different image.
+	 * 
+	 * @param image
+	 */
+	public void setImage(Image image) {
+		im = image.getBI();
 	}
 
 	/**
@@ -180,8 +265,6 @@ public class Image {
 	 * @throws IOException
 	 */
 	public void save(String fileName) throws IOException {
-		List<String> temp = (List<String>) Arrays.asList(fileName);
-		ImageIO.write(im, fileName.substring(temp.lastIndexOf(".")), new File(
-				fileName));
+		ImageIO.write(im, "png", new File(fileName));
 	}
 }
