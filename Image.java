@@ -52,7 +52,9 @@ public class Image {
 	protected Image(BufferedImage bufferedImage) {
 		im = bufferedImage;
 	}
-
+	/**
+	 * Clones the Image to a new Image object with the same data.
+	 */
 	public Image clone() {
 		Image i = new Image(width(), height());
 		i.setSection(0, 0, this);
@@ -285,6 +287,6 @@ public class Image {
 	 * @throws IOException
 	 */
 	public void save(String fileName) throws IOException {
-		ImageIO.write(im, "png", new File(fileName));
+		ImageIO.write(im, fileName.substring(fileName.lastIndexOf('.')+1), new File(fileName));
 	}
 }
