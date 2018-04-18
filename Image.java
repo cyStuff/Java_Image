@@ -191,6 +191,14 @@ public class Image {
 			}
 		}
 	}
+	
+	public void setChannels(int[] color) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i, j, new Color(color));
+			}
+		}
+	}
 
 	/**
 	 * Returns a subsection of the image. May throw an out of bounds exception
