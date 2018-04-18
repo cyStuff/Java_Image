@@ -1,8 +1,6 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.function.UnaryOperator;
 
 import javax.imageio.ImageIO;
@@ -52,6 +50,7 @@ public class Image {
 	protected Image(BufferedImage bufferedImage) {
 		im = bufferedImage;
 	}
+
 	/**
 	 * Clones the Image to a new Image object with the same data.
 	 */
@@ -183,19 +182,17 @@ public class Image {
 			}
 		}
 	}
-	
+
+	/**
+	 * Uses a lambda expression to set all channels.
+	 * 
+	 * @param operator
+	 *            - The UnaryOperator to set all of the channels.
+	 */
 	public void setChannels(UnaryOperator<int[]> operator) {
 		for (int i = 0; i < width(); i++) {
 			for (int j = 0; j < height(); j++) {
 				setPixel(i, j, getPixel(i, j).setColor(operator));
-			}
-		}
-	}
-	
-	public void setChannels(int[] color) {
-		for (int i = 0; i < width(); i++) {
-			for (int j = 0; j < height(); j++) {
-				setPixel(i, j, new Color(color));
 			}
 		}
 	}
@@ -303,6 +300,7 @@ public class Image {
 	 * @throws IOException
 	 */
 	public void save(String fileName) throws IOException {
-		ImageIO.write(im, fileName.substring(fileName.lastIndexOf('.')+1), new File(fileName));
+		ImageIO.write(im, fileName.substring(fileName.lastIndexOf('.') + 1),
+				new File(fileName));
 	}
 }
