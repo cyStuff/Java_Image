@@ -1,6 +1,7 @@
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 
 import javax.imageio.ImageIO;

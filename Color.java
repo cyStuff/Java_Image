@@ -37,7 +37,7 @@ public class Color {
 		}
 		dat = color;
 	}
-	
+
 	public Color setColor(UnaryOperator<int[]> operator) {
 		if (!(operator.apply(dat).length == 3)) {
 			throw new ColorException(
@@ -46,7 +46,7 @@ public class Color {
 		dat = operator.apply(dat);
 		return this;
 	}
-	
+
 	/**
 	 * Sets the red color from an integer value.
 	 * 

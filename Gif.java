@@ -1,4 +1,3 @@
-
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +26,9 @@ public final class Gif {
 	 * @param fileName
 	 *            - The name of the output file.
 	 */
-	public static void makeGif(Image[] images, int frameTime, String fileName) throws IOException {
-		ImageOutputStream output = new FileImageOutputStream(new File(
-				fileName));
+	public static void makeGif(Image[] images, int frameTime, String fileName)
+			throws IOException {
+		ImageOutputStream output = new FileImageOutputStream(new File(fileName));
 		GifWriter g = new GifWriter(output, images[0].getBI().getType(),
 				frameTime, true);
 		for (int i = 0; i < images.length; i++) {
@@ -38,6 +37,7 @@ public final class Gif {
 		g.close();
 		output.close();
 	}
+
 	/**
 	 * Makes a gif from a List of Images.
 	 * 
@@ -48,8 +48,9 @@ public final class Gif {
 	 * @param fileName
 	 *            - The name of the output file.
 	 */
-	public static void makeGif(List<Image> images, int frameTime, String fileName) throws IOException {
-		makeGif(images.toArray(new Image[0]),frameTime,fileName);
+	public static void makeGif(List<Image> images, int frameTime,
+			String fileName) throws IOException {
+		makeGif(images.toArray(new Image[0]), frameTime, fileName);
 	}
 
 	/**
