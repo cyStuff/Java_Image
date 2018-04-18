@@ -5,7 +5,7 @@ Within the Image class, There is the ability to change color channels with lambd
 Here is an example:
 ```Java
 Image i = new Image(16,16);
-i.setChannels(new int[] {255,255,255});
+i.setChannels(arr -> new int[] {255,255,255});
 i.setRedChannel(r -> r/2);
 i.save("Test.png");
 ```
