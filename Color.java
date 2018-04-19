@@ -38,6 +38,13 @@ public class Color {
 		dat = color;
 	}
 
+	/**
+	 * Sets a color based on a UnaryOperator.
+	 * 
+	 * @param operator
+	 *            - UnaryOperator<Integer>
+	 * @return Color
+	 */
 	public Color setColor(UnaryOperator<int[]> operator) {
 		if (!(operator.apply(dat).length == 3)) {
 			throw new ColorException(
@@ -48,10 +55,25 @@ public class Color {
 	}
 
 	/**
+	 * Sets rgb with the same UnaryOperator.
+	 * 
+	 * @param operator
+	 *            - UnaryOperator<Integer>
+	 * @return Color
+	 */
+	public Color setAllColor(UnaryOperator<Integer> operator) {
+		dat[0] = operator.apply(dat[0]);
+		dat[1] = operator.apply(dat[1]);
+		dat[2] = operator.apply(dat[2]);
+		return this;
+	}
+
+	/**
 	 * Sets the red color from an integer value.
 	 * 
 	 * @param color
 	 *            - int
+	 * @return Color
 	 */
 	public Color setRed(int color) {
 		dat[0] = color;
@@ -64,6 +86,7 @@ public class Color {
 	 * 
 	 * @param operator
 	 *            - UnaryOperator<Integer>
+	 * @return Color
 	 */
 	public Color setRed(UnaryOperator<Integer> operator) {
 		dat[0] = operator.apply(dat[0]);
@@ -75,6 +98,7 @@ public class Color {
 	 * 
 	 * @param color
 	 *            - int
+	 * @return Color
 	 */
 	public Color setGreen(int color) {
 		dat[1] = color;
@@ -87,6 +111,7 @@ public class Color {
 	 * 
 	 * @param operator
 	 *            - UnaryOperator<Integer>
+	 * @return Color
 	 */
 	public Color setGreen(UnaryOperator<Integer> operator) {
 		dat[1] = operator.apply(dat[1]);
@@ -98,6 +123,7 @@ public class Color {
 	 * 
 	 * @param color
 	 *            - int
+	 * @return Color
 	 */
 	public Color setBlue(int color) {
 		dat[2] = color;
@@ -110,6 +136,7 @@ public class Color {
 	 * 
 	 * @param operator
 	 *            - UnaryOperator<Integer>
+	 * @return Color
 	 */
 	public Color setBlue(UnaryOperator<Integer> operator) {
 		dat[2] = operator.apply(dat[2]);

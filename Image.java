@@ -197,6 +197,20 @@ public class Image {
 			}
 		}
 	}
+	
+	/**
+	 * Uses a lambda expression to set all channels.
+	 * 
+	 * @param operator
+	 *            - The UnaryOperator to set all of the channels.
+	 */
+	public void setAllChannels(UnaryOperator<Integer> operator) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				setPixel(i, j, getPixel(i, j).setAllColor(operator));
+			}
+		}
+	}
 
 	/**
 	 * Returns a subsection of the image. May throw an out of bounds exception
