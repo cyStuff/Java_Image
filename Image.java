@@ -197,7 +197,25 @@ public class Image {
 			}
 		}
 	}
-	
+
+	/**
+	 * Uses a BinaryOperator to set the color of each pixel based on the color
+	 * and location of that pixel.
+	 * 
+	 * @param operator
+	 *            - The BinaryOperator used to set the color at each pixel of
+	 *            the image.
+	 */
+	public void setChannelsAtPixel(UnaryOperator<int[]> operator) {
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				final int x = i;
+				final int y = j;
+				setPixel(i, j, new Color(operator.apply(new int[] {x,y})));
+			}
+		}
+	}
+
 	/**
 	 * Uses a lambda expression to set all channels.
 	 * 
