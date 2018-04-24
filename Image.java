@@ -1,6 +1,9 @@
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 
@@ -15,9 +18,6 @@ import javax.imageio.ImageIO;
  */
 public class Image {
 	private BufferedImage im;
-	public static String JPG = "jpg";
-	public static String PNG = "png";
-	public static String BMP = "bmp";
 
 	/**
 	 * Opens an image from a file source.
@@ -66,7 +66,7 @@ public class Image {
 	 * 
 	 * @return BufferedImage contained within the Image.
 	 */
-	protected BufferedImage getBI() {
+	public BufferedImage getBI() {
 		return im;
 	}
 
@@ -303,7 +303,22 @@ public class Image {
 			}
 		}
 	}
-
+	
+	public void average() {
+		Image n = new Image(width(),height());
+		for (int i=0; i<width(); i++) {
+			for (int j=0; j<height(); j++) {
+				List<Color> colors = new ArrayList<Color>();
+				if (i-1>=0) {colors.add(getPixel(i-1,j));}
+				if (i+1<width()) {colors.add(getPixel(i+1,j));}
+				if (j-1>=0) {colors.add(getPixel(i,j-1));}
+				if (j+1<height()) {colors.add(getPixel(i,j+1));}
+				n.setPixel(i,j,Color.average(colors));
+			}
+		}
+		im=n.getBI();
+	}
+	
 	/**
 	 * Conversion for BufferedImage
 	 * 
