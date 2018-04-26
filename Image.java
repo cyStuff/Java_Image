@@ -211,7 +211,7 @@ public class Image {
 			for (int j = 0; j < height(); j++) {
 				final int x = i;
 				final int y = j;
-				setPixel(i, j, new Color(operator.apply(new int[] {x,y})));
+				setPixel(i, j, new Color(operator.apply(new int[] { x, y })));
 			}
 		}
 	}
@@ -303,7 +303,7 @@ public class Image {
 			}
 		}
 	}
-	
+
 	/**
 	 * Conversion for BufferedImage
 	 * 
