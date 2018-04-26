@@ -198,16 +198,4 @@ public class Color {
 			super(e);
 		}
 	}
-	
-	public static Color average(List<Color> l) {
-		int r = 0;
-		int g = 0;
-		int b = 0;
-		for (Color c:l) {
-			r+=c.getRed();
-			g+=c.getGreen();
-			b+=c.getBlue();
-		}
-		return new Color(r/l.size(),g/l.size(),b/l.size());
-	}
 }

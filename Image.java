@@ -304,24 +304,6 @@ public class Image {
 		}
 	}
 	
-	public void average(int weight) {
-		Image n = new Image(width(),height());
-		for (int i=0; i<width(); i++) {
-			for (int j=0; j<height(); j++) {
-				List<Color> colors = new ArrayList<Color>();
-				for (int none=0; none<weight; none++) {
-					colors.add(getPixel(i,j));
-				}
-				if (i-1>=0) {colors.add(getPixel(i-1,j));}
-				if (i+1<width()) {colors.add(getPixel(i+1,j));}
-				if (j-1>=0) {colors.add(getPixel(i,j-1));}
-				if (j+1<height()) {colors.add(getPixel(i,j+1));}
-				n.setPixel(i,j,Color.average(colors));
-			}
-		}
-		im=n.getBI();
-	}
-	
 	/**
 	 * Conversion for BufferedImage
 	 * 
