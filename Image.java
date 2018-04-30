@@ -1,4 +1,5 @@
 package core;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.function.UnaryOperator;
@@ -10,7 +11,7 @@ import java.util.function.UnaryOperator;
  * @author cy
  *
  */
-public class Image extends BaseImage{
+public class Image extends BaseImage {
 	public static int SCALE_NEAREST = 0;
 	public static int SCALE_BILENEAR = 1;
 
@@ -34,7 +35,7 @@ public class Image extends BaseImage{
 	 *            - Height of the image.
 	 */
 	public Image(int width, int height) {
-		super(width,height);
+		super(width, height);
 	}
 
 	/**
@@ -179,52 +180,117 @@ public class Image extends BaseImage{
 			}
 		}
 	}
-	
-	public void scale(int x, int y, int hint) {
-		switch(hint) {
-		case(0): nearest(x,y); break;
-		case(1): linearScale(x,y); break;
+
+	/**
+	 * Scales Image based on a new Width and Height.
+	 * 
+	 * @param width
+	 *            - Width of the new Image.
+	 * @param height
+	 *            - Height of the new Image.
+	 * @param hint
+	 *            - Hint as to what type of scaling to use.
+	 */
+	public void scale(int width, int height, int hint) {
+		switch (hint) {
+		case (0):
+			nearest(width, height);
+			break;
+		case (1):
+			bilinear(width, height);
+			break;
 		}
 	}
-	
-	public void scale(double s, int hint) {
-		scale((int)(width()*s),(int)(height()*s),hint);
+
+	/**
+	 * Scales Image based on the scale ratio.
+	 * 
+	 * @param scale
+	 *            - Scale of the new Image.
+	 * @param hint
+	 *            - Hint as to what type of scaling to use.
+	 */
+	public void scale(double scale, int hint) {
+		scale((int) (width() * scale), (int) (height() * scale), hint);
 	}
-	
-	public void scale(int x, int y) {
-		nearest(x,y);
+
+	/**
+	 * Scales Image based on new width and height. Uses nearest neighbor
+	 * scaling.
+	 * 
+	 * @param width
+	 *            - Width of the new Image.
+	 * @param height
+	 *            - Height of the new Image.
+	 */
+	public void scale(int width, int height) {
+		nearest(width, height);
 	}
-	
-	public void scale(double s) {
-		scale((int)(width()*s),(int)(height()*s));
+
+	/**
+	 * Scales Image based on scale ratio. Uses nearest neighbor scaling.
+	 * 
+	 * @param scale
+	 *            - Scale of the new Image.
+	 */
+	public void scale(double scale) {
+		scale((int) (width() * scale), (int) (height() * scale));
 	}
-	
-	private void nearest(int x, int y) {
-		Image P2 = new Image(x,y);
-		for(int i=0; i<x; i++){
-			for(int j=0; j<y; j++){
+
+	/**
+	 * Nearest neighbor scaling for Images.
+	 * 
+	 * @param width
+	 *            - Width of the new Image.
+	 * @param height
+	 *            - Height of the new Image.
+	 */
+	private void nearest(int width, int height) {
+		Image P2 = new Image(width, height);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
 				int[] c = new int[3];
-				for(int k=0; k<c.length; k++) {
-					double I = (double)width()*i/x, J = (double)height()*j/y;
-					c[k] = getPixel((int)Math.min(Math.round(I), width()-1),(int)Math.min(Math.round(J),height()-1)).getArray()[k];
+				for (int k = 0; k < c.length; k++) {
+					double I = (double) width() * i / width, J = (double) height()
+							* j / height;
+					c[k] = getPixel((int) Math.min(Math.round(I), width() - 1),
+							(int) Math.min(Math.round(J), height() - 1))
+							.getArray()[k];
 				}
 				P2.setPixel(i, j, new Color(c));
 			}
 		}
 		setImage(P2);
 	}
-	
-	private void linearScale(int x, int y) {
-		Image P2 = new Image(x,y);
-		for(int i=0; i<x; i++){
-			for(int j=0; j<y; j++){
+
+	/**
+	 * BiLinear scaling for Images.
+	 * 
+	 * @param width
+	 *            - Width of the new Image.
+	 * @param height
+	 *            - Height of the new Image.
+	 */
+	private void bilinear(int width, int height) {
+		Image P2 = new Image(width, height);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
 				int[] c = new int[3];
-				for(int k=0; k<c.length; k++) {
-					double I = (double)width()*i/x, J = (double)height()*j/y;
-					c[k] = (int)( ((1-I%1)*(1-J%1))*getPixel((int)I,(int)J).getArray()[k] +
-							((I%1)*(J%1))*getPixel(Math.min((int)I+1,width()-1),Math.min((int)J+1,height()-1)).getArray()[k] +
-							((1-I%1)*(J%1))*getPixel((int)I,Math.min((int)J+1,height()-1)).getArray()[k] +
-							((I%1)*(1-J%1))*getPixel(Math.min((int)I+1,width()-1),(int)J).getArray()[k] );
+				for (int k = 0; k < c.length; k++) {
+					double I = (double) width() * i / width, J = (double) height()
+							* j / height;
+					c[k] = (int) (((1 - I % 1) * (1 - J % 1))
+							* getPixel((int) I, (int) J).getArray()[k]
+							+ ((I % 1) * (J % 1))
+							* getPixel(Math.min((int) I + 1, width() - 1),
+									Math.min((int) J + 1, height() - 1))
+									.getArray()[k]
+							+ ((1 - I % 1) * (J % 1))
+							* getPixel((int) I,
+									Math.min((int) J + 1, height() - 1))
+									.getArray()[k] + ((I % 1) * (1 - J % 1))
+							* getPixel(Math.min((int) I + 1, width() - 1),
+									(int) J).getArray()[k]);
 				}
 				P2.setPixel(i, j, new Color(c));
 			}
