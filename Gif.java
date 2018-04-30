@@ -17,6 +17,11 @@ import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
 
 public final class Gif {
+	
+	/**
+	 * Private constructor to prevent instantiation.
+	 */
+	private Gif() {}
 	/**
 	 * Makes a gif from an array of Images.
 	 * 
