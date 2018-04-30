@@ -1,5 +1,5 @@
-import java.util.List;
-import java.util.function.*;
+package core;
+import java.util.function.UnaryOperator;
 
 /**
  * Color class to hold the RGB values of a color.
@@ -193,6 +193,7 @@ public class Color {
 	 * 
 	 * @author cy
 	 */
+	@SuppressWarnings("serial")
 	public class ColorException extends RuntimeException {
 		public ColorException(String e) {
 			super(e);
