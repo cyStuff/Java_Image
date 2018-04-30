@@ -46,12 +46,8 @@ public class Color {
 	 *            - UnaryOperator<Integer>
 	 * @return Color
 	 */
-	public Color setColor(UnaryOperator<int[]> operator) {
-		if (!(operator.apply(dat).length == 3)) {
-			throw new ColorException(
-					"Color array must contatain exactly 3 elements.");
-		}
-		dat = operator.apply(dat);
+	public Color setColor(UnaryOperator<Color> operator) {
+		dat = operator.apply(this).getArray();
 		return this;
 	}
 
