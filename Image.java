@@ -1,6 +1,5 @@
 package core;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.function.UnaryOperator;
 
@@ -37,15 +36,12 @@ public class Image extends BaseImage {
 	public Image(int width, int height) {
 		super(width, height);
 	}
-
-	/**
-	 * Creates an image from a BufferedImage in the java.awt.image library.
-	 * 
-	 * @param bufferedImage
-	 *            - Raw BufferedImage to create Image from.
-	 */
-	protected Image(BufferedImage bufferedImage) {
-		super(bufferedImage);
+	
+	
+	public Image clone() {
+		Image i = new Image(width(), height());
+		i.setSection(0, 0, this);
+		return i;
 	}
 
 	/**
@@ -253,8 +249,8 @@ public class Image extends BaseImage {
 				for (int k = 0; k < c.length; k++) {
 					double I = (double) width() * i / width, J = (double) height()
 							* j / height;
-					c[k] = getPixel((int) Math.min(Math.round(I), width() - 1),
-							(int) Math.min(Math.round(J), height() - 1))
+					c[k] = getPixel((int) Math.min((int)(I), width() - 1),
+							(int) Math.min((int)(J), height() - 1))
 							.getArray()[k];
 				}
 				P2.setPixel(i, j, new Color(c));

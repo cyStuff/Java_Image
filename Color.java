@@ -183,6 +183,18 @@ public class Color {
 		}
 		dat = color;
 	}
+	
+	/**
+	 * Tests if two colors are equivalent.
+	 * @param color - Color being tested.
+	 * @return
+	 */
+	public boolean equals(Color color) {
+		if (this.getRed() == color.getRed() && this.getGreen() == color.getGreen() && this.getBlue() == color.getBlue()) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Exception for colors.
