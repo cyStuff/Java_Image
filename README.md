@@ -1,5 +1,5 @@
 # Java_Image
-### Simple Image editing tools for java.
+## Simple Image editing tools for java.
 The Image class is the main class, allowing the opening, editing, and saving of images.
 
 #### Color
@@ -8,19 +8,34 @@ Colors have a few basic meathods like `setBlue();`, `getBlue();`, etc.
 The Color class is immutable, so every operation to change a value will return a new Color.
 
 #### BaseImage
-This is a basic object that allows for more simple image editing.
+This is a basic class that allows for simple image editing.
 ```Java
 BaseImage base = new BaseImage(16,16);
 base.fill(new Color(255,255,255))
 base.save("Test.png")
 ```
+
 #### Image
-The Image class is an exten
+The Image class is an extention of the BaseImage class to allow for things such as bluring, scaling, and changing individual color channels
+The Image class also implements lambda expressions to change the image.
 ```Java
-Image i = new Image(16,16);
-i.setChannels(arr -> new int[] {255,255,255});
-i.setRedChannel(r -> r/2);
-i.save("Test.png");
+Image image = new Image("Input.png");
+image.setChannels(arr -> new int[] {arr[1],arr[0],arr[3]});
+image.setRedChannel(r -> r/2);
+image.save("Test.png");
 ```
-The code `i.setChannels(arr -> new int[] {255,255,255});` fills the image with white. In this case, using fill would be much easier, but this is here for an example.
-The code `i.setRedChannel(r -> r/2);` takes every red value and halves it.
+
+#### Drawing
+The Drawing class is an extention of the Image class that allows for drawing shapes and text.
+```Java
+Drawing draw = new Drawing(128,128);
+draw.fill(new Color(255,255,255));
+draw.fillEllipse(0,0,128,128);
+```
+
+#### Gif
+Gif is a class that enables the creation of gifs from an array or List of Images.
+```Java
+Image[] images;
+Gif.makeGif(images, 10, "out.gif");
+```
