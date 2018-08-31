@@ -36,8 +36,7 @@ public class Image extends BaseImage {
 	public Image(int width, int height) {
 		super(width, height);
 	}
-	
-	
+
 	public Image clone() {
 		Image i = new Image(width(), height());
 		i.setSection(0, 0, this);
@@ -178,6 +177,29 @@ public class Image extends BaseImage {
 	}
 
 	/**
+	 * Imposes an Image onto this Image, excluding all pixels that have the
+	 * color colorKey. The Images have to be the same size.
+	 * 
+	 * @param image
+	 *            - The Image that is imposed
+	 * @param colorKey
+	 *            - The color that is ignored
+	 */
+
+	public void impose(BaseImage image, Color colorKey) {
+		if (image.width() != width() || image.height() != height()) {
+			return;
+		}
+		for (int x = 0; x < image.width(); x++) {
+			for (int y = 0; y < image.width(); y++) {
+				if (!(image.getPixel(x, y).equals(colorKey))) {
+					setPixel(x, y, image.getPixel(x, y));
+				}
+			}
+		}
+	}
+
+	/**
 	 * Scales Image based on a new Width and Height.
 	 * 
 	 * @param width
@@ -249,9 +271,8 @@ public class Image extends BaseImage {
 				for (int k = 0; k < c.length; k++) {
 					double I = (double) width() * i / width, J = (double) height()
 							* j / height;
-					c[k] = getPixel((int) Math.min((int)(I), width() - 1),
-							(int) Math.min((int)(J), height() - 1))
-							.getArray()[k];
+					c[k] = getPixel((int) Math.min((int) (I), width() - 1),
+							(int) Math.min((int) (J), height() - 1)).getArray()[k];
 				}
 				P2.setPixel(i, j, new Color(c));
 			}
@@ -292,6 +313,41 @@ public class Image extends BaseImage {
 			}
 		}
 		setImage(P2);
+	}
+
+	/**
+	 * Blurs an image based on a radius
+	 * 
+	 * @param radius
+	 *            - Width of the square area used to blur.
+	 * 
+	 */
+	public void blur2(int radius) {
+		for (int x = 0; x < width(); x++) {
+			for (int y = 0; y < height(); y++) {
+				long[] colorDat = new long[3];
+				int count = 0;
+				for (int i = -radius; i <= radius; i++) {
+					for (int j = -radius; j <= radius; j++) {
+						try {
+							colorDat[0] += Math.pow(getPixel(x + i, y + j)
+									.getRed(), 2);
+							colorDat[1] += Math.pow(getPixel(x + i, y + j)
+									.getGreen(), 2);
+							colorDat[2] += Math.pow(getPixel(x + i, y + j)
+									.getBlue(), 2);
+							count++;
+						} catch (IndexOutOfBoundsException e) {
+
+						}
+					}
+				}
+				setPixel(x, y,
+						new Color((int) Math.sqrt(colorDat[0] / count),
+								(int) Math.sqrt(colorDat[1] / count),
+								(int) Math.sqrt(colorDat[2] / count)));
+			}
+		}
 	}
 
 	/**

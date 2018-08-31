@@ -51,6 +51,20 @@ public class BaseImage {
 		return i;
 	}
 
+	public boolean equals(BaseImage image) {
+		if (image.width() != width() || image.height() != height()) {
+			return false;
+		}
+		for (int i = 0; i < width(); i++) {
+			for (int j = 0; j < height(); j++) {
+				if (!(getPixel(i, j).equals(image.getPixel(i, j)))) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * Returns the internal BufferedImage.
 	 * 
@@ -86,7 +100,7 @@ public class BaseImage {
 	public void setPixel(int x, int y, Color color) {
 		im.setRGB(x, y, toInt(color.getArray()));
 	}
-	
+
 	/**
 	 * Returns a subsection of the image. May throw an out of bounds exception
 	 * if the section is not within the image.
@@ -118,10 +132,11 @@ public class BaseImage {
 	 */
 	public void setSection(int x, int y, BaseImage image) {
 		BufferedImage bi = image.getBI();
-		int[] dat = bi.getRGB(0, 0, bi.getWidth(), bi.getHeight(), null, 0,
-				bi.getHeight());
+		int[] dat = bi.getRGB(0, 0, image.width(), image.height(), null, 0,
+				Math.max(image.height(), image.width()));
 		// System.out.println(dat.length);
-		im.setRGB(x, y, image.width(), image.height(), dat, 0, bi.getHeight());
+		im.setRGB(x, y, image.width(), image.height(), dat, 0,
+				Math.max(image.height(), image.width()));
 	}
 
 	/**
@@ -146,7 +161,7 @@ public class BaseImage {
 	public int height() {
 		return im.getHeight();
 	}
-	
+
 	/**
 	 * Conversion for BufferedImage
 	 * 
