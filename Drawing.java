@@ -2,12 +2,16 @@ package core;
 
 import java.awt.BasicStroke;
 import java.awt.Font;
-import java.awt.FontFormatException;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.io.File;
-import java.io.IOException;
 
+/**
+ * Image with abilities to draw shapes and text. 
+ * 
+ * @author cy
+ *
+ */
 public class Drawing extends Image {
 	private Graphics2D graph;
 	private float strokeSize;
@@ -18,9 +22,8 @@ public class Drawing extends Image {
 	 * 
 	 * @param source
 	 *            - Source location of the image file.
-	 * @throws IOException
 	 */
-	public Drawing(String source) throws IOException {
+	public Drawing(String source) {
 		super(source);
 		graph = getBI().createGraphics();
 		setColor(new Color(0, 0, 0));
@@ -56,7 +59,7 @@ public class Drawing extends Image {
 	/**
 	 * Change to use antialiasing.
 	 * 
-	 * @param bool
+	 * @param bool - boolean for anti-aliasing
 	 */
 	public void antialiasing(boolean bool) {
 		if (bool) {
@@ -71,7 +74,7 @@ public class Drawing extends Image {
 	/**
 	 * Sets the stroke size when drawing shapes
 	 * 
-	 * @param size
+	 * @param size - width of stroke
 	 */
 	public void setStrokeSize(double size) {
 		strokeSize = (float) size;
@@ -81,7 +84,7 @@ public class Drawing extends Image {
 	/**
 	 * Sets the dash pattern for the stroke.
 	 * 
-	 * @param dash
+	 * @param dash - the dash pattern
 	 */
 	public void setStrokeDash(float[] dash) {
 		graph.setStroke(new BasicStroke(strokeSize, 2, 0, 10, dash, 0));
@@ -90,8 +93,8 @@ public class Drawing extends Image {
 	/**
 	 * Sets the font to some system installed font.
 	 * 
-	 * @param name
-	 * @param size
+	 * @param name - name of system font
+	 * @param size - font size
 	 */
 	public void setFont(String name, int size) {
 		graph.setFont(new Font(name, Font.PLAIN, size));
@@ -100,87 +103,85 @@ public class Drawing extends Image {
 	/**
 	 * Sets the font based on a .ttf file.
 	 * 
-	 * @param fileName
-	 * @param size
-	 * @throws IOException
+	 * @param fileName - font file location
+	 * @param size - font size
 	 */
-	public void openFont(String fileName, int size) throws IOException {
+	public void openFont(String fileName, int size){
 		try {
 			graph.setFont(Font.createFont(Font.TRUETYPE_FONT,
 					new File(fileName)).deriveFont(size));
-		} catch (FontFormatException e) {
+		} 
+		catch (Exception e) {
+			throw new RuntimeException("Problem loading font: "+fileName);
 		}
 	}
 
 	/**
 	 * Draws a string.
 	 * 
-	 * @param str
-	 * @param x
-	 * @param y
+	 * @param str - string to be drawn
+	 * @param x - x position of string
+	 * @param y - y position of string
 	 */
 	public void drawString(String str, int x, int y) {
 		graph.drawString(str, x, y);
 	}
 
 	/**
-	 * Draws a line from point (x1, y1) to (x2, y2).
+	 * Draws a line.
 	 * 
-	 * @param x1
-	 * @param y1
-	 * @param x2
-	 * @param y2
+	 * @param x1 - x coordinate of the first point
+	 * @param y1 - y coordinate of the first point
+	 * @param x2 - x coordinate of the second point
+	 * @param y2 - y coordinate of the second point
 	 */
 	public void drawLine(int x1, int y1, int x2, int y2) {
 		graph.drawLine(x1, y1, x2, y2);
 	}
 
 	/**
-	 * Draws an elipse of size (width, height) with the top left corner at (x,
-	 * y).
+	 * Draws an ellipse.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of ellipse
+	 * @param height - height of ellipse
 	 */
 	public void drawEllipse(int x, int y, int width, int height) {
 		graph.drawOval(x, y, width, height);
 	}
 
 	/**
-	 * Draws and fills an elipse of size (width, height) with the top left
-	 * corner at (x, y).
+	 * Draws and fills an elipse.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of ellipse
+	 * @param height - height of ellipse
 	 */
 	public void fillEllipse(int x, int y, int width, int height) {
 		graph.fillOval(x, y, width, height);
 	}
 
 	/**
-	 * Draws a rectangle of size (width, height) with the left corner at (x, y)
+	 * Draws a rectangle.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of rectangle
+	 * @param height - height of rectangle
 	 */
 	public void drawRect(int x, int y, int width, int height) {
 		graph.drawRect(x, y, width, height);
 	}
 
 	/**
-	 * Draws and fills a rectangle of size (width, height) with the left corner
-	 * at (x, y)
+	 * Draws and fills a rectangle.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of rectangle
+	 * @param height - height of rectangle
 	 */
 	public void fillRect(int x, int y, int width, int height) {
 		graph.fillRect(x, y, width, height);
@@ -190,8 +191,8 @@ public class Drawing extends Image {
 	 * Draws a polygon with points from xPoints and yPoints. Will only use the
 	 * number of points in the smallest list.
 	 * 
-	 * @param xPoints
-	 * @param yPoints
+	 * @param xPoints - array of x coordinates
+	 * @param yPoints - array of y coordinates
 	 */
 	public void drawPolygon(int[] xPoints, int[] yPoints) {
 		graph.drawPolygon(xPoints, yPoints,
@@ -202,8 +203,8 @@ public class Drawing extends Image {
 	 * Draws and fills a polygon with points from xPoints and yPoints. Will only
 	 * use the number of points in the smallest list.
 	 * 
-	 * @param xPoints
-	 * @param yPoints
+	 * @param xPoints - array of x coordinates
+	 * @param yPoints - array of y coordinates
 	 */
 	public void fillPolygon(int[] xPoints, int[] yPoints) {
 		graph.fillPolygon(xPoints, yPoints,
@@ -213,12 +214,12 @@ public class Drawing extends Image {
 	/**
 	 * Draws an elipse, but only draws from angle startAngle to endAngle.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param startAngle
-	 * @param endAngle
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of ellipse
+	 * @param height - height of ellipse
+	 * @param startAngle - angle in degrees to start drawing from
+	 * @param endAngle - angle in degrees to stop drawing at
 	 */
 	public void drawArc(int x, int y, int width, int height, int startAngle,
 			int endAngle) {
@@ -229,12 +230,12 @@ public class Drawing extends Image {
 	 * Draws and fills an elipse, but only draws from angle startAngle to
 	 * endAngle.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param startAngle
-	 * @param endAngle
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of ellipse
+	 * @param height - height of ellipse
+	 * @param startAngle - angle in degrees to start drawing from
+	 * @param endAngle - angle in degrees to stop drawing at
 	 */
 	public void fillArc(int x, int y, int width, int height, int startAngle,
 			int endAngle) {
@@ -242,15 +243,14 @@ public class Drawing extends Image {
 	}
 
 	/**
-	 * Draws a rectangle, but cuts the corners off based on the arcWidth and
-	 * arcHeight.
+	 * Draws a rectangle, but cuts the corners off based on an arc.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param arcWidth
-	 * @param arcHeight
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of rectangle
+	 * @param height - height of rectangle
+	 * @param arcWidth - angle in degrees to start cutting from
+	 * @param arcHeight - angle in degrees to stop cutting at
 	 */
 	public void drawRoundRect(int x, int y, int width, int height,
 			int arcWidth, int arcHeight) {
@@ -258,15 +258,14 @@ public class Drawing extends Image {
 	}
 
 	/**
-	 * Draws and fills a rectangle, but cuts the corners off based on the
-	 * arcWidth and arcHeight.
+	 * Draws and fills a rectangle, but cuts the corners off based on an arc.
 	 * 
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param arcWidth
-	 * @param arcHeight
+	 * @param x - x coordinate of top left corner
+	 * @param y - y coordinate of top left corner
+	 * @param width - width of rectangle
+	 * @param height - height of rectangle
+	 * @param arcWidth - angle in degrees to start cutting from
+	 * @param arcHeight - angle in degrees to stop cutting at
 	 */
 	public void fillRoundRect(int x, int y, int width, int height,
 			int arcWidth, int arcHeight) {

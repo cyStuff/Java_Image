@@ -6,6 +6,12 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+/**
+ * Basic image editing tool.
+ * 
+ * @author cy
+ *
+ */
 public class BaseImage {
 	private BufferedImage im;
 
@@ -14,10 +20,14 @@ public class BaseImage {
 	 * 
 	 * @param source
 	 *            - Source location of the image file.
-	 * @throws IOException
 	 */
-	public BaseImage(String source) throws IOException {
-		im = ImageIO.read(new File(source));
+	public BaseImage(String source){
+		try {
+			im = ImageIO.read(new File(source));
+		}
+		catch(IOException e) {
+			throw new RuntimeException("Can Not Find Source File: " + source);
+		}
 	}
 
 	/**
@@ -70,7 +80,7 @@ public class BaseImage {
 	 * 
 	 * @return BufferedImage contained within the Image.
 	 */
-	public BufferedImage getBI() {
+	protected BufferedImage getBI() {
 		return im;
 	}
 
@@ -139,10 +149,25 @@ public class BaseImage {
 				Math.max(image.height(), image.width()));
 	}
 
+
+	/**
+	 * Fills the image with color.
+	 * 
+	 * @param color
+	 *            - Color for the image to be filled with.
+	 */
+	public void fill(Color color) {
+		for(int x=0; x<width(); x++) {
+			for (int y=0; y<height(); y++) {
+				setPixel(x, y, color);
+			}
+		}
+	}
+	
 	/**
 	 * Sets the current image to a different image.
 	 * 
-	 * @param image
+	 * @param image - image to set current image to
 	 */
 	public void setImage(Image image) {
 		im = image.getBI();
@@ -150,6 +175,8 @@ public class BaseImage {
 
 	/**
 	 * Returns the width of the image.
+	 * 
+	 * @return int defining the image width
 	 */
 	public int width() {
 		return im.getWidth();
@@ -157,6 +184,8 @@ public class BaseImage {
 
 	/**
 	 * Returns the height of the image.
+	 * 
+	 * @return int defining the image height
 	 */
 	public int height() {
 		return im.getHeight();
@@ -188,10 +217,14 @@ public class BaseImage {
 	 * 
 	 * @param fileName
 	 *            - Name of the file to save. Must contain extension.
-	 * @throws IOException
 	 */
-	public void save(String fileName) throws IOException {
+	public void save(String fileName){
+		try {
 		ImageIO.write(im, fileName.substring(fileName.lastIndexOf('.') + 1),
 				new File(fileName));
+		}
+		catch (IOException e) {
+			throw new RuntimeException("Can Not Save File: " + fileName);
+		}
 	}
 }

@@ -1,4 +1,5 @@
 package core;
+
 import java.util.function.UnaryOperator;
 
 /**
@@ -29,9 +30,8 @@ public class Color {
 	 * 
 	 * @param color
 	 *            - int[3]
-	 * @throws ColorException
 	 */
-	public Color(int[] color) throws ColorException {
+	public Color(int[] color) {
 		if (!(color.length == 3)) {
 			throw new ColorException(
 					"Color array must contatain exactly 3 elements.");
@@ -43,19 +43,19 @@ public class Color {
 	 * Sets a color based on a UnaryOperator.
 	 * 
 	 * @param operator
-	 *            - UnaryOperator<Integer>
+	 *            - UnaryOperator applied to the color
 	 * @return Color
 	 */
 	public Color setColor(UnaryOperator<Color> operator) {
-		dat = operator.apply(this).getArray();
-		return this;
+		int[] data = operator.apply(this).getArray();
+		return new Color(data);
 	}
 
 	/**
-	 * Sets rgb with the same UnaryOperator.
+	 * Sets all color channels with the same operator.
 	 * 
 	 * @param operator
-	 *            - UnaryOperator<Integer>
+	 *            - UnaryOperator applied to all channels seperately
 	 * @return Color
 	 */
 	public Color setAllColor(UnaryOperator<Integer> operator) {
@@ -69,7 +69,7 @@ public class Color {
 	 * Sets the red color from an integer value.
 	 * 
 	 * @param color
-	 *            - int
+	 *            - int to define red channel
 	 * @return Color
 	 */
 	public Color setRed(int color) {
@@ -78,11 +78,10 @@ public class Color {
 	}
 
 	/**
-	 * Sets the red value based on a UnaryOperator. This functions as a lambda
-	 * expression.
+	 * Sets the red value based on a UnaryOperator.
 	 * 
 	 * @param operator
-	 *            - UnaryOperator<Integer>
+	 *            - UnaryOperator to set the red channel
 	 * @return Color
 	 */
 	public Color setRed(UnaryOperator<Integer> operator) {
@@ -94,7 +93,7 @@ public class Color {
 	 * Sets the green color from an integer value.
 	 * 
 	 * @param color
-	 *            - int
+	 *            - int to define green channel
 	 * @return Color
 	 */
 	public Color setGreen(int color) {
@@ -103,11 +102,10 @@ public class Color {
 	}
 
 	/**
-	 * Sets the green value based on a UnaryOperator. This functions as a lambda
-	 * expression.
+	 * Sets the green value based on a UnaryOperator.
 	 * 
 	 * @param operator
-	 *            - UnaryOperator<Integer>
+	 *            - UnaryOperator to set the green channel
 	 * @return Color
 	 */
 	public Color setGreen(UnaryOperator<Integer> operator) {
@@ -119,7 +117,7 @@ public class Color {
 	 * Sets the blue color from an integer value.
 	 * 
 	 * @param color
-	 *            - int
+	 *            - int to define blue channel
 	 * @return Color
 	 */
 	public Color setBlue(int color) {
@@ -128,11 +126,10 @@ public class Color {
 	}
 
 	/**
-	 * Sets the blue value based on a UnaryOperator. This functions as a lambda
-	 * expression.
+	 * Sets the blue value based on a UnaryOperator.
 	 * 
 	 * @param operator
-	 *            - UnaryOperator<Integer>
+	 *            - UnaryOperator to set the blue channel
 	 * @return Color
 	 */
 	public Color setBlue(UnaryOperator<Integer> operator) {
@@ -142,6 +139,8 @@ public class Color {
 
 	/**
 	 * Returns the red color value.
+	 * 
+	 * @return the int value for red
 	 */
 	public int getRed() {
 		return dat[0];
@@ -149,6 +148,8 @@ public class Color {
 
 	/**
 	 * Returns the green color value.
+	 * 
+	 * @return the int value for green
 	 */
 	public int getGreen() {
 		return dat[1];
@@ -156,6 +157,8 @@ public class Color {
 
 	/**
 	 * Returns the blue color value.
+	 * 
+	 * @return the int value for blue
 	 */
 	public int getBlue() {
 		return dat[2];
@@ -164,7 +167,7 @@ public class Color {
 	/**
 	 * Get the color values as an int[].
 	 * 
-	 * @return int[3]
+	 * @return int array with 3 values, one for each channel
 	 */
 	public int[] getArray() {
 		return dat;
@@ -174,7 +177,7 @@ public class Color {
 	 * Set the color based on an int[].
 	 * 
 	 * @param color
-	 *            - int[3]
+	 *            - int array that must have exactly 3 values
 	 */
 	public void setArray(int[] color) {
 		if (!(color.length == 3)) {
@@ -183,14 +186,18 @@ public class Color {
 		}
 		dat = color;
 	}
-	
+
 	/**
 	 * Tests if two colors are equivalent.
-	 * @param color - Color being tested.
-	 * @return
+	 * 
+	 * @param color
+	 *            - Color being tested.
+	 * @return boolean telling of equivalent
 	 */
 	public boolean equals(Color color) {
-		if (this.getRed() == color.getRed() && this.getGreen() == color.getGreen() && this.getBlue() == color.getBlue()) {
+		if (this.getRed() == color.getRed()
+				&& this.getGreen() == color.getGreen()
+				&& this.getBlue() == color.getBlue()) {
 			return true;
 		}
 		return false;

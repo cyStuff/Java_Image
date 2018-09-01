@@ -1,11 +1,9 @@
 package core;
 
-import java.io.IOException;
 import java.util.function.UnaryOperator;
 
 /**
- * Image class for editing images. For any bugs or questions, please visit
- * https://github.com/peanut15/Java_Image/issues.
+ * Image editing class with more meathods.
  * 
  * @author cy
  *
@@ -19,9 +17,8 @@ public class Image extends BaseImage {
 	 * 
 	 * @param source
 	 *            - Source location of the image file.
-	 * @throws IOException
 	 */
-	public Image(String source) throws IOException {
+	public Image(String source) {
 		super(source);
 	}
 
@@ -58,8 +55,7 @@ public class Image extends BaseImage {
 	}
 
 	/**
-	 * Uses a lambda expression to set the chanel. Use the form setRedChannel(x
-	 * -> x);
+	 * Uses a lambda expression to set the chanel.
 	 * 
 	 * @param operator
 	 *            - The UnaryOperator to set the entire channel.
@@ -87,8 +83,7 @@ public class Image extends BaseImage {
 	}
 
 	/**
-	 * Uses a lambda expression to set the chanel. Use the form
-	 * setGreenChannel(x -> x);
+	 * Uses a lambda expression to set the chanel.
 	 * 
 	 * @param operator
 	 *            - The UnaryOperator to set the entire channel.
@@ -116,8 +111,7 @@ public class Image extends BaseImage {
 	}
 
 	/**
-	 * Uses a lambda expression to set the chanel. Use the form setBlueChannel(x
-	 * -> x);
+	 * Uses a lambda expression to set the chanel.
 	 * 
 	 * @param operator
 	 *            - The UnaryOperator to set the entire channel.
@@ -322,7 +316,7 @@ public class Image extends BaseImage {
 	 *            - Width of the square area used to blur.
 	 * 
 	 */
-	public void blur2(int radius) {
+	public void blur(int radius) {
 		for (int x = 0; x < width(); x++) {
 			for (int y = 0; y < height(); y++) {
 				long[] colorDat = new long[3];
@@ -348,15 +342,5 @@ public class Image extends BaseImage {
 								(int) Math.sqrt(colorDat[2] / count)));
 			}
 		}
-	}
-
-	/**
-	 * Fills the image with color.
-	 * 
-	 * @param color
-	 *            - Color for the image to be filled with.
-	 */
-	public void fill(Color color) {
-		setChannels(none -> color);
 	}
 }

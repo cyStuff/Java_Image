@@ -1,4 +1,5 @@
 package core;
+
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +16,20 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.FileImageOutputStream;
 import javax.imageio.stream.ImageOutputStream;
-
+/**
+ * Static class for creating gifs.
+ * 
+ * @author cy
+ *
+ */
 public final class Gif {
-	
+
 	/**
 	 * Private constructor to prevent instantiation.
 	 */
-	private Gif() {}
+	private Gif() {
+	}
+
 	/**
 	 * Makes a gif from an array of Images.
 	 * 
@@ -32,16 +40,21 @@ public final class Gif {
 	 * @param fileName
 	 *            - The name of the output file.
 	 */
-	public static void makeGif(Image[] images, int frameTime, String fileName)
-			throws IOException {
-		ImageOutputStream output = new FileImageOutputStream(new File(fileName));
-		GifWriter g = new GifWriter(output, images[0].getBI().getType(),
-				frameTime, true);
-		for (int i = 0; i < images.length; i++) {
-			g.writeToSequence(images[i].getBI());
+	public static void makeGif(BaseImage[] images, int frameTime,
+			String fileName) {
+		try {
+			ImageOutputStream output = new FileImageOutputStream(new File(
+					fileName));
+			GifWriter g = new GifWriter(output, images[0].getBI().getType(),
+					frameTime, true);
+			for (int i = 0; i < images.length; i++) {
+				g.writeToSequence(images[i].getBI());
+			}
+			g.close();
+			output.close();
+		} catch (IOException e) {
+			throw new RuntimeException("Can Not Make Gif.");
 		}
-		g.close();
-		output.close();
 	}
 
 	/**
@@ -54,8 +67,8 @@ public final class Gif {
 	 * @param fileName
 	 *            - The name of the output file.
 	 */
-	public static void makeGif(List<Image> images, int frameTime,
-			String fileName) throws IOException {
+	public static void makeGif(List<BaseImage> images, int frameTime,
+			String fileName) {
 		makeGif(images.toArray(new Image[0]), frameTime, fileName);
 	}
 
