@@ -2,7 +2,7 @@
 ## Simple Image editing tools for java.
 The Image class is the main class, allowing the opening, editing, and saving of images.
 
-Full Javadoc found [here](https://cystuff.github.io/Java_Image/).
+Full Javadoc can be found [here](https://cystuff.github.io/Java_Image/).
 
 #### Color
 The Color class is the base class for all colors in this library.
