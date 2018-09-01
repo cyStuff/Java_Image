@@ -8,8 +8,8 @@ import java.util.function.UnaryOperator;
  * @author cy
  *
  */
-public class Color {
-	private int[] dat;
+public final class Color {
+	private final int[] dat;
 
 	/**
 	 * Sets the color based on RGB int values.
@@ -171,20 +171,6 @@ public class Color {
 	 */
 	public int[] getArray() {
 		return dat;
-	}
-
-	/**
-	 * Set the color based on an int[].
-	 * 
-	 * @param color
-	 *            - int array that must have exactly 3 values
-	 */
-	public void setArray(int[] color) {
-		if (!(color.length == 3)) {
-			throw new ColorException(
-					"Color array must contatain exactly 3 elements.");
-		}
-		dat = color;
 	}
 
 	/**

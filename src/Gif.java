@@ -69,7 +69,7 @@ public final class Gif {
 	 */
 	public static void makeGif(List<BaseImage> images, int frameTime,
 			String fileName) {
-		makeGif(images.toArray(new Image[0]), frameTime, fileName);
+		makeGif(images.toArray(new BaseImage[0]), frameTime, fileName);
 	}
 
 	/**

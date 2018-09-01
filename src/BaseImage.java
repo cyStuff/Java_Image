@@ -169,7 +169,7 @@ public class BaseImage {
 	 * 
 	 * @param image - image to set current image to
 	 */
-	public void setImage(Image image) {
+	public void setImage(BaseImage image) {
 		im = image.getBI();
 	}
 
