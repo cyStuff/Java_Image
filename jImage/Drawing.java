@@ -14,8 +14,9 @@ import java.io.File;
  */
 public class Drawing extends Image {
   private Graphics2D graph;
-  private float strokeSize;
+  private Float strokeSize;
   private float[] dash = new float[1];
+  private Color strokeColor;
 
   /**
    * Opens an image from a file source.
@@ -25,7 +26,9 @@ public class Drawing extends Image {
   public Drawing(String source) {
     super(source);
     graph = getBI().createGraphics();
-    setColor(new Color(0, 0, 0));
+    strokeColor = new Color(0,0,0);
+    dash[0] = 1;
+    setStrokeColor(strokeColor);
     fill(new Color(255, 255, 255));
   }
 
@@ -38,8 +41,20 @@ public class Drawing extends Image {
   public Drawing(int width, int height) {
     super(width, height);
     graph = getBI().createGraphics();
-    setColor(new Color(0, 0, 0));
+    strokeColor = new Color(0,0,0);
+    dash[0] = 1;
+    setStrokeColor(strokeColor);
     fill(new Color(255, 255, 255));
+  }
+  
+  /**
+   * Reloads the internal graphics. Used after a resize to realign the grahics module.
+   */
+  public void updateDrawing() {
+    graph.dispose();
+    graph = null;
+    graph = getBI().createGraphics();
+    setStrokeColor(strokeColor);
   }
 
   /**
@@ -47,7 +62,8 @@ public class Drawing extends Image {
    * 
    * @param color Color to draw with.
    */
-  public void setColor(Color color) {
+  public void setStrokeColor(Color color) {
+    strokeColor = color;
     graph.setColor(new java.awt.Color(color.getRed(), color.getGreen(), color
         .getBlue()));
   }
