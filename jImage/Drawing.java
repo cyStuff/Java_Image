@@ -14,9 +14,6 @@ import java.io.File;
  */
 public class Drawing extends Image {
   private Graphics2D graph;
-  private Float strokeSize;
-  private float[] dash = new float[1];
-  private Color strokeColor;
 
   /**
    * Opens an image from a file source.
@@ -26,9 +23,7 @@ public class Drawing extends Image {
   public Drawing(String source) {
     super(source);
     graph = getBI().createGraphics();
-    strokeColor = new Color(0,0,0);
-    dash[0] = 1;
-    setStrokeColor(strokeColor);
+    setStrokeColor(new Color(0,0,0));
     fill(new Color(255, 255, 255));
   }
 
@@ -41,9 +36,7 @@ public class Drawing extends Image {
   public Drawing(int width, int height) {
     super(width, height);
     graph = getBI().createGraphics();
-    strokeColor = new Color(0,0,0);
-    dash[0] = 1;
-    setStrokeColor(strokeColor);
+    setStrokeColor(new Color(0,0,0));
     fill(new Color(255, 255, 255));
   }
   
@@ -52,9 +45,10 @@ public class Drawing extends Image {
    */
   public void updateDrawing() {
     graph.dispose();
+    BasicStroke s = (BasicStroke) graph.getStroke();
     graph = null;
     graph = getBI().createGraphics();
-    setStrokeColor(strokeColor);
+    graph.setStroke(s);
   }
 
   /**
@@ -63,7 +57,6 @@ public class Drawing extends Image {
    * @param color Color to draw with.
    */
   public void setStrokeColor(Color color) {
-    strokeColor = color;
     graph.setColor(new java.awt.Color(color.getRed(), color.getGreen(), color
         .getBlue()));
   }
@@ -89,17 +82,31 @@ public class Drawing extends Image {
    * @param size width of stroke
    */
   public void setStrokeSize(double size) {
-    strokeSize = (float) size;
-    graph.setStroke(new BasicStroke(strokeSize, 2, 0, 10, dash, 0));
+    BasicStroke s = (BasicStroke) graph.getStroke();
+    graph.setStroke(new BasicStroke((float)size, s.getEndCap(), s.getLineJoin(), s.getMiterLimit(), s.getDashArray(), s.getDashPhase()));
   }
 
   /**
-   * Sets the dash pattern for the stroke.
+   * Sets the dash pattern for the stroke with a float[].
    * 
    * @param dash the dash pattern
    */
   public void setStrokeDash(float[] dash) {
-    graph.setStroke(new BasicStroke(strokeSize, 2, 0, 10, dash, 0));
+    BasicStroke s = (BasicStroke) graph.getStroke();
+    graph.setStroke(new BasicStroke(s.getLineWidth(), s.getEndCap(), s.getLineJoin(), s.getMiterLimit(), dash, s.getDashPhase()));
+  }
+  
+  /**
+   * Sets the dash pattern for the stroke with a double[].
+   * 
+   * @param dash the dash pattern
+   */
+  public void setStrokeDash(double[] dash) {
+    float[] dat = new float[dash.length];
+    for(int i=0; i<dat.length; i++) {
+      dat[i] = (float)dash[i];
+    }
+    setStrokeDash(dat);
   }
 
   /**
