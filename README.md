@@ -3,7 +3,7 @@
 ## Docs are not up to date on indev!
 #### Full Javadoc can be found [here](https://cystuff.github.io/Java_Image/index.html).
 Note:  
-Every `IOException` has been abstracted to a `RuntimeException` for my AP class.
+Every `Exception` has been abstracted to a `RuntimeException` for my AP class.
 
 #### Color
 The Color class is the base class for all colors in this library.
