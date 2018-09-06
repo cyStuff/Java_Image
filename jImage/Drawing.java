@@ -15,6 +15,8 @@ import java.io.File;
 public class Drawing extends Image {
   private Graphics2D graph;
 
+  private static Object strokeLock = new Object();
+
   /**
    * Opens an image from a file source.
    * 
@@ -23,7 +25,7 @@ public class Drawing extends Image {
   public Drawing(String source) {
     super(source);
     graph = getBI().createGraphics();
-    setStrokeColor(new Color(0,0,0));
+    setStrokeColor(new Color(0, 0, 0));
     fill(new Color(255, 255, 255));
   }
 
@@ -36,19 +38,30 @@ public class Drawing extends Image {
   public Drawing(int width, int height) {
     super(width, height);
     graph = getBI().createGraphics();
-    setStrokeColor(new Color(0,0,0));
+    setStrokeColor(new Color(0, 0, 0));
     fill(new Color(255, 255, 255));
   }
-  
+
   /**
-   * Reloads the internal graphics. Used after a resize to realign the grahics module.
+   * Reloads the internal graphics. Used after a resize to realign the grahics
+   * module.
    */
   public void updateDrawing() {
-    graph.dispose();
-    BasicStroke s = (BasicStroke) graph.getStroke();
-    graph = null;
-    graph = getBI().createGraphics();
-    graph.setStroke(s);
+    synchronized (im) {
+      synchronized (strokeLock) {
+        graph.dispose();
+        BasicStroke s = (BasicStroke) graph.getStroke();
+        java.awt.Color c = graph.getColor();
+        RenderingHints hints = graph.getRenderingHints();
+        Font f = graph.getFont();
+        graph = null;
+        graph = getBI().createGraphics();
+        graph.setStroke(s);
+        graph.setColor(c);
+        graph.setRenderingHints(hints);
+        graph.setFont(f);
+      }
+    }
   }
 
   /**
@@ -57,8 +70,9 @@ public class Drawing extends Image {
    * @param color Color to draw with.
    */
   public void setStrokeColor(Color color) {
-    graph.setColor(new java.awt.Color(color.getRed(), color.getGreen(), color
-        .getBlue()));
+    synchronized (strokeLock) {
+      graph.setColor(new java.awt.Color(color.getRed(), color.getGreen(), color.getBlue()));
+    }
   }
 
   /**
@@ -67,12 +81,12 @@ public class Drawing extends Image {
    * @param bool boolean for anti-aliasing
    */
   public void antialiasing(boolean bool) {
-    if (bool) {
-      graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-          RenderingHints.VALUE_ANTIALIAS_ON);
-    } else {
-      graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-          RenderingHints.VALUE_ANTIALIAS_OFF);
+    synchronized (strokeLock) {
+      if (bool) {
+        graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+      } else {
+        graph.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+      }
     }
   }
 
@@ -82,8 +96,10 @@ public class Drawing extends Image {
    * @param size width of stroke
    */
   public void setStrokeSize(double size) {
-    BasicStroke s = (BasicStroke) graph.getStroke();
-    graph.setStroke(new BasicStroke((float)size, s.getEndCap(), s.getLineJoin(), s.getMiterLimit(), s.getDashArray(), s.getDashPhase()));
+    synchronized (strokeLock) {
+      BasicStroke s = (BasicStroke) graph.getStroke();
+      graph.setStroke(new BasicStroke((float) size, s.getEndCap(), s.getLineJoin(), s.getMiterLimit(), s.getDashArray(), s.getDashPhase()));
+    }
   }
 
   /**
@@ -92,21 +108,25 @@ public class Drawing extends Image {
    * @param dash the dash pattern
    */
   public void setStrokeDash(float[] dash) {
-    BasicStroke s = (BasicStroke) graph.getStroke();
-    graph.setStroke(new BasicStroke(s.getLineWidth(), s.getEndCap(), s.getLineJoin(), s.getMiterLimit(), dash, s.getDashPhase()));
+    synchronized (strokeLock) {
+      BasicStroke s = (BasicStroke) graph.getStroke();
+      graph.setStroke(new BasicStroke(s.getLineWidth(), s.getEndCap(), s.getLineJoin(), s.getMiterLimit(), dash, s.getDashPhase()));
+    }
   }
-  
+
   /**
    * Sets the dash pattern for the stroke with a double[].
    * 
    * @param dash the dash pattern
    */
   public void setStrokeDash(double[] dash) {
-    float[] dat = new float[dash.length];
-    for(int i=0; i<dat.length; i++) {
-      dat[i] = (float)dash[i];
+    synchronized (strokeLock) {
+      float[] dat = new float[dash.length];
+      for (int i = 0; i < dat.length; i++) {
+        dat[i] = (float) dash[i];
+      }
+      setStrokeDash(dat);
     }
-    setStrokeDash(dat);
   }
 
   /**
@@ -116,7 +136,9 @@ public class Drawing extends Image {
    * @param size font size
    */
   public void setFont(String name, int size) {
-    graph.setFont(new Font(name, Font.PLAIN, size));
+    synchronized (strokeLock) {
+      graph.setFont(new Font(name, Font.PLAIN, size));
+    }
   }
 
   /**
@@ -126,55 +148,68 @@ public class Drawing extends Image {
    * @param size font size
    */
   public void openFont(String fileName, int size) {
-    try {
-      graph.setFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName))
-          .deriveFont(size));
-    } catch (Exception e) {
-      throw new RuntimeException("Problem loading font: " + fileName);
+    synchronized (strokeLock) {
+      try {
+        graph.setFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)).deriveFont(size));
+      } catch (Exception e) {
+        throw new RuntimeException("Problem loading font: " + fileName);
+      }
     }
   }
-  
+
   /**
-   * Scales Image based on scale ratio. Uses nearest neighbor scaling. Overide is to reset Graphics2D.
+   * Scales Image based on scale ratio. Uses nearest neighbor scaling. Overide
+   * is to reset Graphics2D.
    * 
    * @param scale Scale of the new Image.
    */
-  public void scale(double scale) {
-    super.scale(scale);
-    updateDrawing();
+  public synchronized void scale(double scale) {
+    synchronized (im) {
+      super.scale(scale);
+      updateDrawing();
+    }
   }
-  
+
   /**
    * Scales Image based on the scale ratio. Overide is to reset Graphics2D.
+   * 
    * @param scale Scale of the new Image.
    * @param hint Hint as to what type of scaling to use.
    */
-  public void scale(double scale, int hint) {
-    super.scale(scale, hint);
-    updateDrawing();
+  public synchronized void scale(double scale, int hint) {
+    synchronized (im) {
+      super.scale(scale, hint);
+      updateDrawing();
+    }
   }
-  
+
   /**
-   * Resizes Image based on new width and height. Uses nearest neighbor scaling. Overide is to reset Graphics2D.
+   * Resizes Image based on new width and height. Uses nearest neighbor scaling.
+   * Overide is to reset Graphics2D.
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    */
-  public void resize(int width, int height) {
-    super.resize(width, height);
-    updateDrawing();
+  public synchronized void resize(int width, int height) {
+    synchronized (im) {
+      super.resize(width, height);
+      updateDrawing();
+    }
   }
-  
+
   /**
-   * Resizes Image based on a new Width and Height. Overide is to reset Graphics2D.
+   * Resizes Image based on a new Width and Height. Overide is to reset
+   * Graphics2D.
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    * @param hint Hint as to what type of scaling to use.
    */
-  public void resize(int width, int height, int hint) {
-    super.resize(width, height, hint);
-    updateDrawing();
+  public synchronized void resize(int width, int height, int hint) {
+    synchronized (im) {
+      super.resize(width, height, hint);
+      updateDrawing();
+    }
   }
 
   /**
@@ -185,7 +220,9 @@ public class Drawing extends Image {
    * @param y y position of string
    */
   public void drawString(String str, int x, int y) {
-    graph.drawString(str, x, y);
+    synchronized (im) {
+      graph.drawString(str, x, y);
+    }
   }
 
   /**
@@ -197,7 +234,9 @@ public class Drawing extends Image {
    * @param y2 y coordinate of the second point
    */
   public void drawLine(int x1, int y1, int x2, int y2) {
-    graph.drawLine(x1, y1, x2, y2);
+    synchronized (im) {
+      graph.drawLine(x1, y1, x2, y2);
+    }
   }
 
   /**
@@ -209,7 +248,9 @@ public class Drawing extends Image {
    * @param height height of ellipse
    */
   public void drawEllipse(int x, int y, int width, int height) {
-    graph.drawOval(x, y, width, height);
+    synchronized (im) {
+      graph.drawOval(x, y, width, height);
+    }
   }
 
   /**
@@ -221,7 +262,9 @@ public class Drawing extends Image {
    * @param height height of ellipse
    */
   public void fillEllipse(int x, int y, int width, int height) {
-    graph.fillOval(x, y, width, height);
+    synchronized (im) {
+      graph.fillOval(x, y, width, height);
+    }
   }
 
   /**
@@ -233,7 +276,9 @@ public class Drawing extends Image {
    * @param height height of rectangle
    */
   public void drawRect(int x, int y, int width, int height) {
-    graph.drawRect(x, y, width, height);
+    synchronized (im) {
+      graph.drawRect(x, y, width, height);
+    }
   }
 
   /**
@@ -245,7 +290,9 @@ public class Drawing extends Image {
    * @param height height of rectangle
    */
   public void fillRect(int x, int y, int width, int height) {
-    graph.fillRect(x, y, width, height);
+    synchronized (im) {
+      graph.fillRect(x, y, width, height);
+    }
   }
 
   /**
@@ -256,8 +303,9 @@ public class Drawing extends Image {
    * @param yPoints array of y coordinates
    */
   public void drawPolygon(int[] xPoints, int[] yPoints) {
-    graph.drawPolygon(xPoints, yPoints,
-        Math.min(xPoints.length, yPoints.length));
+    synchronized (im) {
+      graph.drawPolygon(xPoints, yPoints, Math.min(xPoints.length, yPoints.length));
+    }
   }
 
   /**
@@ -268,8 +316,9 @@ public class Drawing extends Image {
    * @param yPoints array of y coordinates
    */
   public void fillPolygon(int[] xPoints, int[] yPoints) {
-    graph.fillPolygon(xPoints, yPoints,
-        Math.min(xPoints.length, yPoints.length));
+    synchronized (im) {
+      graph.fillPolygon(xPoints, yPoints, Math.min(xPoints.length, yPoints.length));
+    }
   }
 
   /**
@@ -282,9 +331,10 @@ public class Drawing extends Image {
    * @param startAngle angle in degrees to start drawing from
    * @param endAngle angle in degrees to stop drawing at
    */
-  public void drawArc(int x, int y, int width, int height, int startAngle,
-      int endAngle) {
-    graph.drawArc(x, y, width, height, startAngle, endAngle - startAngle);
+  public void drawArc(int x, int y, int width, int height, int startAngle, int endAngle) {
+    synchronized (im) {
+      graph.drawArc(x, y, width, height, startAngle, endAngle - startAngle);
+    }
   }
 
   /**
@@ -298,9 +348,10 @@ public class Drawing extends Image {
    * @param startAngle angle in degrees to start drawing from
    * @param endAngle angle in degrees to stop drawing at
    */
-  public void fillArc(int x, int y, int width, int height, int startAngle,
-      int endAngle) {
-    graph.fillArc(x, y, width, height, startAngle, endAngle - startAngle);
+  public void fillArc(int x, int y, int width, int height, int startAngle, int endAngle) {
+    synchronized (im) {
+      graph.fillArc(x, y, width, height, startAngle, endAngle - startAngle);
+    }
   }
 
   /**
@@ -313,9 +364,10 @@ public class Drawing extends Image {
    * @param arcWidth angle in degrees to start cutting from
    * @param arcHeight angle in degrees to stop cutting at
    */
-  public void drawRoundRect(int x, int y, int width, int height, int arcWidth,
-      int arcHeight) {
-    graph.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
+  public void drawRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+    synchronized (im) {
+      graph.drawRoundRect(x, y, width, height, arcWidth, arcHeight);
+    }
   }
 
   /**
@@ -328,8 +380,9 @@ public class Drawing extends Image {
    * @param arcWidth angle in degrees to start cutting from
    * @param arcHeight angle in degrees to stop cutting at
    */
-  public void fillRoundRect(int x, int y, int width, int height, int arcWidth,
-      int arcHeight) {
-    graph.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
+  public void fillRoundRect(int x, int y, int width, int height, int arcWidth, int arcHeight) {
+    synchronized (im) {
+      graph.fillRoundRect(x, y, width, height, arcWidth, arcHeight);
+    }
   }
 }

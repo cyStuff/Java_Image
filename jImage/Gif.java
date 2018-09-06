@@ -28,8 +28,7 @@ public final class Gif {
   /**
    * Private constructor to prevent instantiation.
    */
-  private Gif() {
-  }
+  private Gif() {}
 
   /**
    * Makes a gif from an array of Images.

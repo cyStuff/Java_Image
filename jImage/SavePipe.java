@@ -29,11 +29,13 @@ class SavePipe {
    * Returns the singleton instance of SavePipe
    * @return Instance of SavePipe
    */
-  public static SavePipe getPipe() {
-    if (pipe == null) {
-      pipe = new SavePipe();
+  public synchronized static SavePipe getPipe() {
+    synchronized(pipe) {
+      if (pipe == null) {
+        pipe = new SavePipe();
+      }
+      return pipe;
     }
-    return pipe;
   }
   
   /**
@@ -41,9 +43,11 @@ class SavePipe {
    * @param im Image to be added
    * @param fn File name for the image
    */
-  public void save(Image im, String fn) {
-    images.add(im);
-    names.add(fn);
+  public synchronized void save(Image im, String fn) {
+    synchronized(pipe) {
+      images.add(im);
+      names.add(fn);
+    }
   }
   
   /**

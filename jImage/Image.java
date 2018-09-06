@@ -35,9 +35,11 @@ public class Image extends BaseImage {
    * Clones the Image to a new Image object with the same data.
    */
   public Image clone() {
-    Image i = new Image(width(), height());
-    i.setSection(0, 0, this);
-    return i;
+    synchronized(im) {
+      Image i = new Image(width(), height());
+      i.setSection(0, 0, this);
+      return i;
+    }
   }
 
   /**
@@ -46,9 +48,11 @@ public class Image extends BaseImage {
    * @param color Int to set all the red channel to.
    */
   public void setRedChannel(int color) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setRed(color));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setRed(color));
+        }
       }
     }
   }
@@ -59,9 +63,11 @@ public class Image extends BaseImage {
    * @param operator The UnaryOperator to set the entire channel.
    */
   public void setRedChannel(UnaryOperator<Integer> operator) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setRed(operator));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setRed(operator));
+        }
       }
     }
   }
@@ -72,9 +78,11 @@ public class Image extends BaseImage {
    * @param color Int to set all the green channel to.
    */
   public void setGreenChannel(int color) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setGreen(color));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setGreen(color));
+        }
       }
     }
   }
@@ -85,9 +93,11 @@ public class Image extends BaseImage {
    * @param operator The UnaryOperator to set the entire channel.
    */
   public void setGreenChannel(UnaryOperator<Integer> operator) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setGreen(operator));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setGreen(operator));
+        }
       }
     }
   }
@@ -98,9 +108,11 @@ public class Image extends BaseImage {
    * @param color Int to set all the blue channel to.
    */
   public void setBlueChannel(int color) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setBlue(color));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setBlue(color));
+        }
       }
     }
   }
@@ -111,9 +123,11 @@ public class Image extends BaseImage {
    * @param operator The UnaryOperator to set the entire channel.
    */
   public void setBlueChannel(UnaryOperator<Integer> operator) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setBlue(operator));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setBlue(operator));
+        }
       }
     }
   }
@@ -124,9 +138,11 @@ public class Image extends BaseImage {
    * @param operator The UnaryOperator to set all of the channels.
    */
   public void setChannels(UnaryOperator<Color> operator) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setColor(operator));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setColor(operator));
+        }
       }
     }
   }
@@ -139,11 +155,13 @@ public class Image extends BaseImage {
    *          the image.
    */
   public void setChannelsAtPixel(UnaryOperator<int[]> operator) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        final int x = i;
-        final int y = j;
-        setPixel(i, j, new Color(operator.apply(new int[] { x, y })));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          final int x = i;
+          final int y = j;
+          setPixel(i, j, new Color(operator.apply(new int[] { x, y })));
+        }
       }
     }
   }
@@ -154,9 +172,11 @@ public class Image extends BaseImage {
    * @param operator The UnaryOperator to set all of the channels.
    */
   public void setAllChannels(UnaryOperator<Integer> operator) {
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        setPixel(i, j, getPixel(i, j).setAllColor(operator));
+    synchronized(im) {
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          setPixel(i, j, getPixel(i, j).setAllColor(operator));
+        }
       }
     }
   }
@@ -170,13 +190,15 @@ public class Image extends BaseImage {
    */
 
   public void impose(BaseImage image, Color colorKey) {
-    if (image.width() != width() || image.height() != height()) {
-      return;
-    }
-    for (int x = 0; x < image.width(); x++) {
-      for (int y = 0; y < image.width(); y++) {
-        if (!(image.getPixel(x, y).equals(colorKey))) {
-          setPixel(x, y, image.getPixel(x, y));
+    synchronized(im) {
+      if (image.width() != width() || image.height() != height()) {
+        return;
+      }
+      for (int x = 0; x < image.width(); x++) {
+        for (int y = 0; y < image.width(); y++) {
+          if (!(image.getPixel(x, y).equals(colorKey))) {
+            setPixel(x, y, image.getPixel(x, y));
+          }
         }
       }
     }
@@ -237,21 +259,23 @@ public class Image extends BaseImage {
    * @param height Height of the new Image.
    * 
    */
-  protected void scaleNearest(int width, int height) {
-    Image P2 = new Image(width, height);
-    for (int i = 0; i < width; i++) {
-      for (int j = 0; j < height; j++) {
-        int[] c = new int[3];
-        for (int k = 0; k < c.length; k++) {
-          double I = (double) width() * i / width, J = (double) height() * j
-              / height;
-          c[k] = getPixel((int) Math.min((int) (I), width() - 1),
-              (int) Math.min((int) (J), height() - 1)).getArray()[k];
+  protected synchronized void scaleNearest(int width, int height) {
+    synchronized(im) {
+      Image P2 = new Image(width, height);
+      for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+          int[] c = new int[3];
+          for (int k = 0; k < c.length; k++) {
+            double I = (double) width() * i / width, J = (double) height() * j
+                / height;
+            c[k] = getPixel((int) Math.min((int) (I), width() - 1),
+                (int) Math.min((int) (J), height() - 1)).getArray()[k];
+          }
+          P2.setPixel(i, j, new Color(c));
         }
-        P2.setPixel(i, j, new Color(c));
       }
+      setImage(P2);
     }
-    setImage(P2);
   }
 
   /**
@@ -263,29 +287,31 @@ public class Image extends BaseImage {
    * 
    * @author Andrew
    */
-  protected void scaleBilinear(int width, int height) {
-    Image P2 = new Image(width, height);
-    for (int i = 0; i < width; i++) {
-      for (int j = 0; j < height; j++) {
-        int[] c = new int[3];
-        for (int k = 0; k < c.length; k++) {
-          double I = (double) width() * i / width, J = (double) height() * j
-              / height;
-          c[k] = (int) (((1 - I % 1) * (1 - J % 1))
-              * getPixel((int) I, (int) J).getArray()[k]
-              + ((I % 1) * (J % 1))
-              * getPixel(Math.min((int) I + 1, width() - 1),
-                  Math.min((int) J + 1, height() - 1)).getArray()[k]
-              + ((1 - I % 1) * (J % 1))
-              * getPixel((int) I, Math.min((int) J + 1, height() - 1))
-                  .getArray()[k] + ((I % 1) * (1 - J % 1))
-              * getPixel(Math.min((int) I + 1, width() - 1), (int) J)
-                  .getArray()[k]);
+  protected synchronized void scaleBilinear(int width, int height) {
+    synchronized(im) {
+      Image P2 = new Image(width, height);
+      for (int i = 0; i < width; i++) {
+        for (int j = 0; j < height; j++) {
+          int[] c = new int[3];
+          for (int k = 0; k < c.length; k++) {
+            double I = (double) width() * i / width, J = (double) height() * j
+                / height;
+            c[k] = (int) (((1 - I % 1) * (1 - J % 1))
+                * getPixel((int) I, (int) J).getArray()[k]
+                + ((I % 1) * (J % 1))
+                * getPixel(Math.min((int) I + 1, width() - 1),
+                    Math.min((int) J + 1, height() - 1)).getArray()[k]
+                + ((1 - I % 1) * (J % 1))
+                * getPixel((int) I, Math.min((int) J + 1, height() - 1))
+                    .getArray()[k] + ((I % 1) * (1 - J % 1))
+                * getPixel(Math.min((int) I + 1, width() - 1), (int) J)
+                    .getArray()[k]);
+          }
+          P2.setPixel(i, j, new Color(c));
         }
-        P2.setPixel(i, j, new Color(c));
       }
+      setImage(P2);
     }
-    setImage(P2);
   }
 
   /**
@@ -295,28 +321,30 @@ public class Image extends BaseImage {
    * 
    */
   public void blur(int radius) {
-    for (int x = 0; x < width(); x++) {
-      for (int y = 0; y < height(); y++) {
-        long[] colorDat = new long[3];
-        int count = 0;
-        for (int i = -radius; i <= radius; i++) {
-          for (int j = -radius; j <= radius; j++) {
-            try {
-              colorDat[0] += Math.pow(getPixel(x + i, y + j).getRed(), 2);
-              colorDat[1] += Math.pow(getPixel(x + i, y + j).getGreen(), 2);
-              colorDat[2] += Math.pow(getPixel(x + i, y + j).getBlue(), 2);
-              count++;
-            } catch (IndexOutOfBoundsException e) {
-
+    synchronized(im) {
+      for (int x = 0; x < width(); x++) {
+        for (int y = 0; y < height(); y++) {
+          long[] colorDat = new long[3];
+          int count = 0;
+          for (int i = -radius; i <= radius; i++) {
+            for (int j = -radius; j <= radius; j++) {
+              try {
+                colorDat[0] += Math.pow(getPixel(x + i, y + j).getRed(), 2);
+                colorDat[1] += Math.pow(getPixel(x + i, y + j).getGreen(), 2);
+                colorDat[2] += Math.pow(getPixel(x + i, y + j).getBlue(), 2);
+                count++;
+              } catch (IndexOutOfBoundsException e) {
+  
+              }
             }
           }
+          setPixel(
+              x,
+              y,
+              new Color((int) Math.sqrt(colorDat[0] / count), (int) Math
+                  .sqrt(colorDat[1] / count), (int) Math
+                  .sqrt(colorDat[2] / count)));
         }
-        setPixel(
-            x,
-            y,
-            new Color((int) Math.sqrt(colorDat[0] / count), (int) Math
-                .sqrt(colorDat[1] / count), (int) Math
-                .sqrt(colorDat[2] / count)));
       }
     }
   }
@@ -327,8 +355,10 @@ public class Image extends BaseImage {
    * 
    * @param fileName Name of the file to save. Must contain extension.
    */
-  public void concurrentSave(String fileName) {
-    SavePipe s = SavePipe.getPipe();
-    s.save(this.clone(), fileName);
+  public synchronized void concurrentSave(String fileName) {
+    synchronized(im) {
+      SavePipe s = SavePipe.getPipe();
+      s.save(this.clone(), fileName);
+    }
   } 
 }
