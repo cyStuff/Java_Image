@@ -192,10 +192,10 @@ public class Image extends BaseImage {
   public void resize(int width, int height, int hint) {
     switch (hint) {
     case (0):
-      nearest(width, height);
+      scaleNearest(width, height);
       break;
     case (1):
-      bilinear(width, height);
+      scaleBilinear(width, height);
       break;
     }
   }
@@ -217,7 +217,7 @@ public class Image extends BaseImage {
    * @param height Height of the new Image.
    */
   public void resize(int width, int height) {
-    nearest(width, height);
+    scaleNearest(width, height);
   }
 
   /**
@@ -231,13 +231,13 @@ public class Image extends BaseImage {
 
   /**
    * Nearest neighbor scaling for Images.
+   * Made by Andrew Osborne
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    * 
-   * @author Andrew
    */
-  private void nearest(int width, int height) {
+  protected void scaleNearest(int width, int height) {
     Image P2 = new Image(width, height);
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < height; j++) {
@@ -256,13 +256,14 @@ public class Image extends BaseImage {
 
   /**
    * BiLinear scaling for Images.
+   * Made by Andrew Osborne
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    * 
    * @author Andrew
    */
-  private void bilinear(int width, int height) {
+  protected void scaleBilinear(int width, int height) {
     Image P2 = new Image(width, height);
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < height; j++) {
@@ -327,26 +328,7 @@ public class Image extends BaseImage {
    * @param fileName Name of the file to save. Must contain extension.
    */
   public void concurrentSave(String fileName) {
-    Saver s = new Saver(this.clone(), fileName);
-    Thread t = new Thread(s);
-    t.start();
-  }
-  
-  /**
-   * Runnable class for concurrent saving.
-   * 
-   * @author cy
-   */
-  private class Saver implements Runnable{
-    Image im;
-    String loc;
-    public Saver(Image i, String fn) {
-      im = i;
-      loc = fn;
-    }
-    
-    public void run() {
-      im.save(loc);
-    }
-  }
+    SavePipe s = SavePipe.getPipe();
+    s.save(this.clone(), fileName);
+  } 
 }
