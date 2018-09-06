@@ -319,4 +319,34 @@ public class Image extends BaseImage {
       }
     }
   }
+  
+  /**
+   * Saves the Image using threads.
+   * This is used to save large files and not take up as much processing time.
+   * 
+   * @param fileName Name of the file to save. Must contain extension.
+   */
+  public void concurrentSave(String fileName) {
+    Saver s = new Saver(this.clone(), fileName);
+    Thread t = new Thread(s);
+    t.start();
+  }
+  
+  /**
+   * Runnable class for concurrent saving.
+   * 
+   * @author cy
+   */
+  private class Saver implements Runnable{
+    Image im;
+    String loc;
+    public Saver(Image i, String fn) {
+      im = i;
+      loc = fn;
+    }
+    
+    public void run() {
+      im.save(loc);
+    }
+  }
 }
