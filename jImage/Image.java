@@ -183,13 +183,13 @@ public class Image extends BaseImage {
   }
 
   /**
-   * Scales Image based on a new Width and Height.
+   * Resizes Image based on a new Width and Height.
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    * @param hint Hint as to what type of scaling to use.
    */
-  public void scale(int width, int height, int hint) {
+  public void resize(int width, int height, int hint) {
     switch (hint) {
     case (0):
       nearest(width, height);
@@ -207,16 +207,16 @@ public class Image extends BaseImage {
    * @param hint Hint as to what type of scaling to use.
    */
   public void scale(double scale, int hint) {
-    scale((int) (width() * scale), (int) (height() * scale), hint);
+    resize((int) (width() * scale), (int) (height() * scale), hint);
   }
 
   /**
-   * Scales Image based on new width and height. Uses nearest neighbor scaling.
+   * Resizes Image based on new width and height. Uses nearest neighbor scaling.
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    */
-  public void scale(int width, int height) {
+  public void resize(int width, int height) {
     nearest(width, height);
   }
 

@@ -155,25 +155,25 @@ public class Drawing extends Image {
   }
   
   /**
-   * Scales Image based on new width and height. Uses nearest neighbor scaling. Overide is to reset Graphics2D.
+   * Resizes Image based on new width and height. Uses nearest neighbor scaling. Overide is to reset Graphics2D.
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    */
-  public void scale(int width, int height) {
-    super.scale(width, height);
+  public void resize(int width, int height) {
+    super.resize(width, height);
     updateDrawing();
   }
   
   /**
-   * Scales Image based on a new Width and Height. Overide is to reset Graphics2D.
+   * Resizes Image based on a new Width and Height. Overide is to reset Graphics2D.
    * 
    * @param width Width of the new Image.
    * @param height Height of the new Image.
    * @param hint Hint as to what type of scaling to use.
    */
-  public void scale(int width, int height, int hint) {
-    super.scale(width, height, hint);
+  public void resize(int width, int height, int hint) {
+    super.resize(width, height, hint);
     updateDrawing();
   }
 
