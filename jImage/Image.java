@@ -31,6 +31,9 @@ public class Image extends BaseImage {
     super(width, height);
   }
 
+  /**
+   * Clones the Image to a new Image object with the same data.
+   */
   public Image clone() {
     Image i = new Image(width(), height());
     i.setSection(0, 0, this);

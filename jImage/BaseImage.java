@@ -48,13 +48,14 @@ public class BaseImage {
   }
 
   /**
-   * Clones the Image to a new Image object with the same data.
+   * Clones the BaseImage to a new BaseImage object with the same data.
    */
   public BaseImage clone() {
     BaseImage i = new BaseImage(width(), height());
     i.setSection(0, 0, this);
     return i;
   }
+  
 /**
  * Tests Image equality
  * @param image Image to test
