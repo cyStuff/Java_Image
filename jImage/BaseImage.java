@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
  *
  */
 public class BaseImage {
-  private BufferedImage im;
+  protected BufferedImage im;
 
   /**
    * Opens an image from a file source.
@@ -48,30 +48,35 @@ public class BaseImage {
   }
 
   /**
-   * Clones the Image to a new Image object with the same data.
+   * Clones the BaseImage to a new BaseImage object with the same data.
    */
-  public BaseImage clone() {
-    BaseImage i = new BaseImage(width(), height());
-    i.setSection(0, 0, this);
-    return i;
+  public synchronized BaseImage clone() {
+    synchronized(im) {
+      BaseImage i = new BaseImage(width(), height());
+      i.setSection(0, 0, this);
+      return i;
+    }
   }
+  
 /**
  * Tests Image equality
  * @param image Image to test
  * @return boolean representing equality
  */
   public boolean equals(BaseImage image) {
-    if (image.width() != width() || image.height() != height()) {
-      return false;
-    }
-    for (int i = 0; i < width(); i++) {
-      for (int j = 0; j < height(); j++) {
-        if (!(getPixel(i, j).equals(image.getPixel(i, j)))) {
-          return false;
+    synchronized(im) {
+      if (image.width() != width() || image.height() != height()) {
+        return false;
+      }
+      for (int i = 0; i < width(); i++) {
+        for (int j = 0; j < height(); j++) {
+          if (!(getPixel(i, j).equals(image.getPixel(i, j)))) {
+            return false;
+          }
         }
       }
+      return true;
     }
-    return true;
   }
 
   /**
@@ -79,7 +84,7 @@ public class BaseImage {
    * 
    * @return BufferedImage contained within the Image.
    */
-  protected BufferedImage getBI() {
+  protected synchronized BufferedImage getBI() {
     return im;
   }
 
@@ -91,7 +96,9 @@ public class BaseImage {
    * @return Color of the pixel.
    */
   public Color getPixel(int x, int y) {
-    return new Color(fromInt(im.getRGB(x, y)));
+    synchronized(im) {
+      return new Color(fromInt(im.getRGB(x, y)));
+    }
   }
 
   /**
@@ -102,7 +109,9 @@ public class BaseImage {
    * @param color Color the pixel will be set to.
    */
   public void setPixel(int x, int y, Color color) {
-    im.setRGB(x, y, toInt(color.getArray()));
+    synchronized(im) {
+      im.setRGB(x, y, toInt(color.getArray()));
+    }
   }
 
   /**
@@ -116,7 +125,9 @@ public class BaseImage {
    * @return Image which is a smaller part of the original.
    */
   public BaseImage subSection(int x, int y, int width, int height) {
-    return new BaseImage(im.getSubimage(x, y, width, height));
+    synchronized(im) {
+      return new BaseImage(im.getSubimage(x, y, width, height));
+    }
   }
 
   /**
@@ -128,12 +139,14 @@ public class BaseImage {
    * @param image Image to be set.
    */
   public void setSection(int x, int y, BaseImage image) {
-    BufferedImage bi = image.getBI();
-    int[] dat = bi.getRGB(0, 0, image.width(), image.height(), null, 0,
-        Math.max(image.height(), image.width()));
-    // System.out.println(dat.length);
-    im.setRGB(x, y, image.width(), image.height(), dat, 0,
-        Math.max(image.height(), image.width()));
+    synchronized(im) {
+      BufferedImage bi = image.getBI();
+      int[] dat = bi.getRGB(0, 0, image.width(), image.height(), null, 0,
+          Math.max(image.height(), image.width()));
+      // System.out.println(dat.length);
+      im.setRGB(x, y, image.width(), image.height(), dat, 0,
+          Math.max(image.height(), image.width()));
+    }
   }
 
   /**
@@ -142,9 +155,11 @@ public class BaseImage {
    * @param color Color for the image to be filled with.
    */
   public void fill(Color color) {
-    for (int x = 0; x < width(); x++) {
-      for (int y = 0; y < height(); y++) {
-        setPixel(x, y, color);
+    synchronized(im) {
+      for (int x = 0; x < width(); x++) {
+        for (int y = 0; y < height(); y++) {
+          setPixel(x, y, color);
+        }
       }
     }
   }
@@ -154,8 +169,10 @@ public class BaseImage {
    * 
    * @param image image to set current image to
    */
-  public void setImage(BaseImage image) {
-    im = image.getBI();
+  public synchronized void setImage(BaseImage image) {
+    synchronized(im) {
+      im = image.getBI();
+    }
   }
 
   /**
@@ -164,7 +181,9 @@ public class BaseImage {
    * @return int defining the image width
    */
   public int width() {
-    return im.getWidth();
+    synchronized(im) {
+      return im.getWidth();
+    }
   }
 
   /**
@@ -173,7 +192,9 @@ public class BaseImage {
    * @return int defining the image height
    */
   public int height() {
-    return im.getHeight();
+    synchronized(im) {
+      return im.getHeight();
+    }
   }
 
   /**
@@ -202,12 +223,14 @@ public class BaseImage {
    * 
    * @param fileName Name of the file to save. Must contain extension.
    */
-  public void save(String fileName) {
-    try {
-      ImageIO.write(im, fileName.substring(fileName.lastIndexOf('.') + 1),
-          new File(fileName));
-    } catch (IOException e) {
-      throw new RuntimeException("Can Not Save File: " + fileName);
+  public synchronized void save(String fileName) {
+    synchronized (im) {
+      try {
+        ImageIO.write(im, fileName.substring(fileName.lastIndexOf('.') + 1),
+            new File(fileName));
+      } catch (IOException e) {
+        throw new RuntimeException("Can Not Save File: " + fileName);
+      }
     }
   }
 }
